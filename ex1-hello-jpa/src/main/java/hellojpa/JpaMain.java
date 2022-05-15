@@ -16,41 +16,21 @@ public class JpaMain {
         tx.begin();
 
         try{
-            //[code]
-
-            //jpql
-            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
-
-            for (Member member : result) {
-                System.out.println("member = " + member.getName());
-            }
-
-            /* update
-            Member findMember = em.find(Member.class, 1L);
-            findMember.setName("HelloJPA");
-            select문과의 차이 :  em.persist 저장 안해줘도 된다 */
-
-
-            /* delete
-            em.remove();
-            */
-
-            /* select
-            Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.id = " + findMember.getId());
-            System.out.println("findMember.name = " + findMember.getName());
-            */
-
-            /* insert
+            //비영속
             Member member = new Member();
-            member.setId(2L);
-            member.setName("HelloB");
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            em.persist(member);*/
+            //영속 - 1차 캐시에 저장됨
+            em.persist(member);
 
-            //[code]
+            //1차 캐시에서 조회
+           Member findMember = em.find(Member.class,100L);
 
-            tx.commit();
+            System.out.println("memberId = "+findMember.getId());
+            System.out.println("memberName = "+findMember.getName());
+
+            tx.commit(); //커밋시점에 db에 저장됨
         } catch  (Exception e){
             tx.rollback();
         } finally {
